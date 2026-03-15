@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_office_client_form" model="ir.ui.view">
+        <field name="name">office.client.form</field>
+        <field name="model">office.client</field>
+        <field name="arch" type="xml">
+            <form string="Office Client">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Client Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                        <group>
+                            <field name="discount_type"/>
+                            <field name="user_id"/>
+                            <field name="total_debt" readonly="1" decoration-danger="total_debt &gt; 0" decoration-success="total_debt &lt;= 0"/>
+                        </group>
+                    </group>
+
+                    <!-- Discount Split Percentages (Visible for both Yearly and Per Invoice) -->
+                    <group string="Discount Configuration (إعدادات الخصم)" invisible="discount_type == 'none'">
+                        <group string="Discount Percentages (النسب)">
+                            <field name="yearly_discount_percentage" string="Total Discount (%) - الإجمالي"/>
+                            <field name="discount_office_percentage" string="Office (%) - المكتب"/>
+                            <field name="discount_perfume_percentage" string="Perfume Factory (%) - مصنع البرفان"/>
+                            <field name="discount_eclador_percentage" string="Eclador Factory (%) - مصنع الأكلادور"/>
+                        </group>
+                        
+                        <!-- Current Year Summary only for Yearly -->
+                        <group string="Yearly Discount Summary (ملخص السنة للخصم السنوي)" invisible="discount_type != 'yearly'">
+                            <field name="current_year_collections_total" readonly="1" string="Total Collections (إجمالي التحصيل)"/>
+                            <field name="current_year_office_discount" readonly="1" string="Office Pays (المكتب يدفع)"/>
+                            <field name="yearly_perfume_invoices_total" readonly="1" string="Perfume Invoices Total"/>
+                            <field name="yearly_perfume_discount_owed" readonly="1" string="Perfume Owes Office (البرفان يدين المكتب)"/>
+                            <field name="yearly_eclador_invoices_total" readonly="1" string="Eclador Invoices Total"/>
+                            <field name="yearly_eclador_discount_owed" readonly="1" string="Eclador Owes Office (الأكلادور يدين المكتب)"/>
+                            <field name="current_year_discount_earned" readonly="1" string="Total Discount Earned (إجمالي الخصم)"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Transactions" name="transactions">
+                            <field name="transaction_ids" context="{'default_client_id': active_id}">
+                                <tree decoration-info="transaction_type == 'payment'" decoration-danger="transaction_type == 'invoice'">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="transaction_type"/>
+                                    <field name="amount"/>
+                                    <field name="discount_percentage" column_invisible="parent.discount_type == 'none'" readonly="transaction_type == 'payment' or parent.discount_type != 'per_invoice'"/>
+                                    <field name="net_amount" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_office_client_tree" model="ir.ui.view">
+        <field name="name">office.client.tree</field>
+        <field name="model">office.client</field>
+        <field name="arch" type="xml">
+            <tree string="Office Clients">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="discount_type"/>
+                <field name="yearly_discount_percentage" optional="show"/>
+                <field name="total_debt" decoration-danger="total_debt &gt; 0" decoration-success="total_debt &lt;= 0"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_office_client" model="ir.actions.act_window">
+        <field name="name">Office Clients</field>
+        <field name="res_model">office.client</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first office client!
+            </p>
+        </field>
+    </record>
+
+    <!-- Search View for Yearly Discount Report -->
+    <record id="view_yearly_discount_report_search" model="ir.ui.view">
+        <field name="name">office.yearly.discount.report.search</field>
+        <field name="model">office.yearly.discount.report</field>
+        <field name="arch" type="xml">
+            <search string="Yearly Discount Search">
+                <field name="client_id"/>
+                <field name="user_id"/>
+                <field name="year"/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_by_client" context="{'group_by':'client_id'}"/>
+                    <filter string="Salesperson" name="group_by_user" context="{'group_by':'user_id'}"/>
+                    <filter string="Year" name="group_by_year" context="{'group_by':'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Yearly Discounts Tree View — Split by Factory -->
+    <record id="view_office_yearly_discount_report_tree" model="ir.ui.view">
+        <field name="name">office.yearly.discount.report.tree</field>
+        <field name="model">office.yearly.discount.report</field>
+        <field name="arch" type="xml">
+            <tree string="Yearly Discounts (Split)" create="false" edit="false" delete="false">
+                <field name="year"/>
+                <field name="client_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+
+                <!-- Collections & Office Discount -->
+                <field name="total_collections" sum="Total Collections" string="Collections"/>
+                <field name="discount_office_percentage" string="Office %"/>
+                <field name="office_discount_amount" sum="Total Office Discount" string="Office Discount Amt" decoration-info="office_discount_amount &gt; 0"/>
+
+                <!-- Perfume Factory -->
+                <field name="perfume_invoices_total" sum="Total Perfume Invoices" string="Perfume Invoices"/>
+                <field name="discount_perfume_percentage" string="Perfume %"/>
+                <field name="perfume_discount_owed" sum="Total Perfume Discount" string="Perfume Disc. Owed" decoration-warning="perfume_discount_owed &gt; 0"/>
+
+                <!-- Eclador Factory -->
+                <field name="eclador_invoices_total" sum="Total Eclador Invoices" string="Eclador Invoices"/>
+                <field name="discount_eclador_percentage" string="Eclador %"/>
+                <field name="eclador_discount_owed" sum="Total Eclador Discount" string="Eclador Disc. Owed" decoration-warning="eclador_discount_owed &gt; 0"/>
+
+                <!-- Grand Total -->
+                <field name="yearly_discount_percentage" string="Total %"/>
+                <field name="total_earned_discount" sum="Grand Total Discount" string="Total Discount Earned" decoration-danger="total_earned_discount &gt; 0"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pivot View for Yearly Discount Report -->
+    <record id="view_office_yearly_discount_report_pivot" model="ir.ui.view">
+        <field name="name">office.yearly.discount.report.pivot</field>
+        <field name="model">office.yearly.discount.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Yearly Discounts Pivot">
+                <field name="year" type="row"/>
+                <field name="client_id" type="row"/>
+                <field name="office_discount_amount" type="measure" string="Office Discount"/>
+                <field name="perfume_invoices_total" type="measure" string="Perfume Invoices"/>
+                <field name="perfume_discount_owed" type="measure" string="Perfume Discount"/>
+                <field name="eclador_invoices_total" type="measure" string="Eclador Invoices"/>
+                <field name="eclador_discount_owed" type="measure" string="Eclador Discount"/>
+                <field name="total_earned_discount" type="measure" string="Total Discount"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action for Yearly Discounts -->
+    <record id="action_yearly_discounts" model="ir.actions.act_window">
+        <field name="name">Yearly Discounts (الخصومات السنوية)</field>
+        <field name="res_model">office.yearly.discount.report</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="view_yearly_discount_report_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_by_year': 1}</field>
+    </record>
+
+</odoo>

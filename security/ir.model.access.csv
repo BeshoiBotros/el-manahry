@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_office_client_user,office.client.user,model_office_client,group_office_client_user,1,1,1,0
+access_office_client_transaction_user,office.client.transaction.user,model_office_client_transaction,group_office_client_user,1,1,1,0
+access_office_client_manager,office.client.manager,model_office_client,group_office_client_manager,1,1,1,1
+access_office_client_transaction_manager,office.client.transaction.manager,model_office_client_transaction,group_office_client_manager,1,1,1,1
+access_office_product_user,office.product.user,model_office_product,group_office_client_user,1,0,0,0
+access_office_product_manager,office.product.manager,model_office_product,group_office_client_manager,1,1,1,1
+access_office_client_transaction_line_user,office.client.transaction.line.user,model_office_client_transaction_line,group_office_client_user,1,0,0,0
+access_office_client_transaction_line_manager,office.client.transaction.line.manager,model_office_client_transaction_line,group_office_client_manager,1,1,1,1
+access_yearly_discount_report_user,office.yearly.discount.report.user,model_office_yearly_discount_report,group_office_client_user,1,0,0,0
+access_yearly_discount_report_manager,office.yearly.discount.report.manager,model_office_yearly_discount_report,group_office_client_manager,1,0,0,0
+access_office_expense_user,office.expense.user,model_office_expense,group_office_client_user,1,0,0,0
+access_office_expense_manager,office.expense.manager,model_office_expense,group_office_client_manager,1,1,1,1
+access_office_profit_report_user,office.profit.report.user,model_office_profit_report,group_office_client_user,1,0,0,0
+access_office_profit_report_manager,office.profit.report.manager,model_office_profit_report,group_office_client_manager,1,0,0,0

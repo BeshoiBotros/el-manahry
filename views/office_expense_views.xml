@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Office Expense Views                                         -->
+    <!-- ============================================================ -->
+
+    <record id="view_office_expense_form" model="ir.ui.view">
+        <field name="name">office.expense.form</field>
+        <field name="model">office.expense</field>
+        <field name="arch" type="xml">
+            <form string="Office Expense">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" string="Description"/>
+                            <field name="expense_type"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_office_expense_tree" model="ir.ui.view">
+        <field name="name">office.expense.tree</field>
+        <field name="model">office.expense</field>
+        <field name="arch" type="xml">
+            <tree string="Office Expenses" default_order="date desc">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="expense_type"/>
+                <field name="amount" sum="Total"/>
+                <field name="notes" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_office_expense_search" model="ir.ui.view">
+        <field name="name">office.expense.search</field>
+        <field name="model">office.expense</field>
+        <field name="arch" type="xml">
+            <search string="Search Expenses">
+                <field name="name"/>
+                <field name="expense_type"/>
+                <field name="date"/>
+                <filter string="Labor / عمالة"       name="f_labor"     domain="[('expense_type','=','labor')]"/>
+                <filter string="Server / سيرفر"      name="f_server"    domain="[('expense_type','=','server')]"/>
+                <filter string="Porters / شيالين"    name="f_porter"    domain="[('expense_type','=','porter')]"/>
+                <filter string="Transport / نقل"     name="f_transport" domain="[('expense_type','=','transport')]"/>
+                <filter string="Other / أخرى"        name="f_other"     domain="[('expense_type','=','other')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Type"  name="gb_type"  context="{'group_by':'expense_type'}"/>
+                    <filter string="Month" name="gb_month" context="{'group_by':'month'}"/>
+                    <filter string="Year"  name="gb_year"  context="{'group_by':'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_office_expense_pivot" model="ir.ui.view">
+        <field name="name">office.expense.pivot</field>
+        <field name="model">office.expense</field>
+        <field name="arch" type="xml">
+            <pivot string="Expenses Pivot">
+                <field name="month"        type="row"/>
+                <field name="expense_type" type="col"/>
+                <field name="amount"       type="measure" string="Amount"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_office_expense_graph" model="ir.ui.view">
+        <field name="name">office.expense.graph</field>
+        <field name="model">office.expense</field>
+        <field name="arch" type="xml">
+            <graph string="Expenses by Type" type="bar" stacked="True">
+                <field name="month"        type="row"/>
+                <field name="expense_type" type="col"/>
+                <field name="amount"       type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_office_expense" model="ir.actions.act_window">
+        <field name="name">Office Expenses (مصروفات المكتب)</field>
+        <field name="res_model">office.expense</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_office_expense_search"/>
+        <field name="context">{'search_default_gb_month': 1}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Office Profit Report Views                                   -->
+    <!-- ============================================================ -->
+
+    <record id="view_office_profit_report_search" model="ir.ui.view">
+        <field name="name">office.profit.report.search</field>
+        <field name="model">office.profit.report</field>
+        <field name="arch" type="xml">
+            <search string="Profit Report Search">
+                <field name="year"/>
+                <field name="month"/>
+                <group expand="1" string="Group By">
+                    <filter string="Year"  name="gb_year"  context="{'group_by':'year'}"/>
+                    <filter string="Month" name="gb_month" context="{'group_by':'month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_office_profit_report_tree" model="ir.ui.view">
+        <field name="name">office.profit.report.tree</field>
+        <field name="model">office.profit.report</field>
+        <field name="arch" type="xml">
+            <tree string="Profit Report" create="false" edit="false" delete="false"
+                  decoration-success="net_profit &gt; 0"
+                  decoration-danger="net_profit &lt; 0">
+                <field name="year"   optional="show"/>
+                <field name="month"  string="Month"/>
+
+                <!-- Income -->
+                <field name="total_invoices"      sum="Total Invoiced"       string="Total Invoiced"/>
+                <field name="total_office_profit" sum="Gross Office Profit"  string="Gross Profit (ربح إجمالي)" decoration-info="total_office_profit &gt; 0"/>
+                <field name="total_factory_share" sum="Factory Share"        string="Factory Share" optional="show"/>
+
+                <!-- Expenses breakdown -->
+                <field name="labor_expenses"     sum="Labor"     string="Labor / عمالة"    optional="show"/>
+                <field name="server_expenses"    sum="Server"    string="Server / سيرفر"   optional="show"/>
+                <field name="porter_expenses"    sum="Porters"   string="Porters / شيالين" optional="show"/>
+                <field name="transport_expenses" sum="Transport" string="Transport / نقل"  optional="show"/>
+                <field name="other_expenses"     sum="Other"     string="Other / أخرى"     optional="show"/>
+                <field name="total_expenses"     sum="Total Expenses" string="Total Expenses (إجمالي المصروفات)" decoration-danger="total_expenses &gt; 0"/>
+
+                <!-- Net -->
+                <field name="net_profit" sum="Net Profit" string="Net Profit (صافي الربح)"
+                       decoration-success="net_profit &gt; 0"
+                       decoration-danger="net_profit &lt; 0"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_office_profit_report_pivot" model="ir.ui.view">
+        <field name="name">office.profit.report.pivot</field>
+        <field name="model">office.profit.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Profit Report Pivot">
+                <field name="month"               type="row"/>
+                <field name="total_office_profit" type="measure" string="Gross Profit"/>
+                <field name="total_expenses"      type="measure" string="Total Expenses"/>
+                <field name="net_profit"          type="measure" string="Net Profit"/>
+                <field name="labor_expenses"      type="measure" string="Labor"/>
+                <field name="server_expenses"     type="measure" string="Server"/>
+                <field name="porter_expenses"     type="measure" string="Porters"/>
+                <field name="transport_expenses"  type="measure" string="Transport"/>
+                <field name="other_expenses"      type="measure" string="Other"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_office_profit_report_graph" model="ir.ui.view">
+        <field name="name">office.profit.report.graph</field>
+        <field name="model">office.profit.report</field>
+        <field name="arch" type="xml">
+            <graph string="Net Profit by Month" type="bar">
+                <field name="month"               type="row"/>
+                <field name="total_office_profit" type="measure" string="Gross Profit"/>
+                <field name="total_expenses"      type="measure" string="Expenses"/>
+                <field name="net_profit"          type="measure" string="Net Profit"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_office_profit_report" model="ir.actions.act_window">
+        <field name="name">Profit Report (تقرير الأرباح)</field>
+        <field name="res_model">office.profit.report</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="search_view_id" ref="view_office_profit_report_search"/>
+        <field name="context">{'search_default_gb_year': 1}</field>
+    </record>
+
+</odoo>

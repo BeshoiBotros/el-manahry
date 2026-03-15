@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_client_transaction_form" model="ir.ui.view">
+        <field name="name">office.client.transaction.form</field>
+        <field name="model">office.client.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Transaction">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="client_id"/>
+                            <field name="name"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="transaction_type"/>
+                            <field name="amount" readonly="transaction_type in ('invoice', 'return')"/>
+                            <field name="discount_percentage" readonly="transaction_type == 'payment' or client_id.discount_type != 'per_invoice'"/>
+                            <field name="total_discount_amount" readonly="1" invisible="transaction_type not in ('invoice', 'return')"/>
+                            
+                            <!-- Detailed Discount Split (Managers Only) -->
+                            <field name="office_discount_amount" readonly="1" invisible="transaction_type not in ('invoice', 'return')" groups="office_client_cards.group_office_client_manager"/>
+                            <field name="perfume_discount_amount" readonly="1" invisible="transaction_type not in ('invoice', 'return')" groups="office_client_cards.group_office_client_manager"/>
+                            <field name="eclador_discount_amount" readonly="1" invisible="transaction_type not in ('invoice', 'return')" groups="office_client_cards.group_office_client_manager"/>
+                            
+                            <field name="net_amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook invisible="transaction_type not in ('invoice', 'return')">
+                        <page string="Invoice Lines">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="subtotal" readonly="1"/>
+                                    <field name="office_profit" readonly="1" groups="office_client_cards.group_office_client_manager"/>
+                                    <field name="factory_share" readonly="1" groups="office_client_cards.group_office_client_manager"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_office_profit" readonly="1" groups="office_client_cards.group_office_client_manager"/>
+                                <field name="total_factory_share" readonly="1" groups="office_client_cards.group_office_client_manager"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_client_transaction_tree" model="ir.ui.view">
+        <field name="name">office.client.transaction.tree</field>
+        <field name="model">office.client.transaction</field>
+        <field name="arch" type="xml">
+            <tree string="Transactions" default_order="date desc, id desc">
+                <field name="date"/>
+                <field name="client_id"/>
+                <field name="name"/>
+                <field name="transaction_type"/>
+                <field name="amount" sum="Total Amount"/>
+                <field name="net_amount" sum="Total Net Amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_client_transaction_search" model="ir.ui.view">
+        <field name="name">office.client.transaction.search</field>
+        <field name="model">office.client.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Transactions">
+                <field name="client_id"/>
+                <field name="name"/>
+                <field name="date"/>
+                <filter string="Invoices" name="type_invoice" domain="[('transaction_type', '=', 'invoice')]"/>
+                <filter string="Returns" name="type_return" domain="[('transaction_type', '=', 'return')]"/>
+                <filter string="Payments" name="type_payment" domain="[('transaction_type', '=', 'payment')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_by_client" context="{'group_by':'client_id'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by':'date'}"/>
+                    <filter string="Type" name="group_by_type" context="{'group_by':'transaction_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action: All Transactions -->
+    <record id="action_client_transaction" model="ir.actions.act_window">
+        <field name="name">All Transactions</field>
+        <field name="res_model">office.client.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_client': 1}</field>
+    </record>
+
+    <!-- Action: Invoices Only (Managers) -->
+    <record id="action_client_invoices" model="ir.actions.act_window">
+        <field name="name">Invoices (الفواتير)</field>
+        <field name="res_model">office.client.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('transaction_type', '=', 'invoice')]</field>
+        <field name="context">{'default_transaction_type': 'invoice', 'search_default_type_invoice': 1}</field>
+    </record>
+
+    <!-- Action: Returns Only (Managers) -->
+    <record id="action_client_returns" model="ir.actions.act_window">
+        <field name="name">Returns (مرتجعات)</field>
+        <field name="res_model">office.client.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('transaction_type', '=', 'return')]</field>
+        <field name="context">{'default_transaction_type': 'return', 'search_default_type_return': 1}</field>
+    </record>
+
+    <!-- Action: Payments Only -->
+    <record id="action_client_payments" model="ir.actions.act_window">
+        <field name="name">Payments (المقبوضات)</field>
+        <field name="res_model">office.client.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('transaction_type', '=', 'payment')]</field>
+        <field name="context">{'default_transaction_type': 'payment', 'search_default_type_payment': 1}</field>
+    </record>
+
+
+    <!-- Transaction Line Reporting Views -->
+    <record id="view_transaction_line_pivot" model="ir.ui.view">
+        <field name="name">office.client.transaction.line.pivot</field>
+        <field name="model">office.client.transaction.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Analysis">
+                <field name="factory_type" type="row"/>
+                <field name="transaction_date" interval="month" type="col"/>
+                <field name="subtotal" type="measure"/>
+                <field name="office_profit" type="measure"/>
+                <field name="factory_share" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_transaction_line_graph" model="ir.ui.view">
+        <field name="name">office.client.transaction.line.graph</field>
+        <field name="model">office.client.transaction.line</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Analysis" type="bar" stacked="True">
+                <field name="factory_type"/>
+                <field name="office_profit" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_transaction_line_search" model="ir.ui.view">
+        <field name="name">office.client.transaction.line.search</field>
+        <field name="model">office.client.transaction.line</field>
+        <field name="arch" type="xml">
+            <search string="Sales Analysis Search">
+                <field name="product_id"/>
+                <field name="factory_type"/>
+                <field name="transaction_date"/>
+                <filter string="Perfume" name="factory_perfume" domain="[('factory_type', '=', 'perfume')]"/>
+                <filter string="Eclador" name="factory_eclador" domain="[('factory_type', '=', 'eclador')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Factory" name="group_by_factory" context="{'group_by':'factory_type'}"/>
+                    <filter string="Product" name="group_by_product" context="{'group_by':'product_id'}"/>
+                    <filter string="Month" name="group_by_month" context="{'group_by':'transaction_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_transaction_line_tree" model="ir.ui.view">
+        <field name="name">office.client.transaction.line.tree</field>
+        <field name="model">office.client.transaction.line</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Analysis Details" create="false" edit="false" delete="false">
+                <field name="transaction_date"/>
+                <field name="transaction_id" string="Invoice"/>
+                <field name="product_id"/>
+                <field name="factory_type"/>
+                <field name="quantity" sum="Total Quantity"/>
+                <field name="price_unit"/>
+                <field name="subtotal" sum="Total Sales"/>
+                <field name="office_profit" sum="Total Office Profit" groups="office_client_cards.group_office_client_manager"/>
+                <field name="factory_share" sum="Total Factory Share" groups="office_client_cards.group_office_client_manager"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_transaction_analysis" model="ir.actions.act_window">
+        <field name="name">Sales Analysis (تحليل المبيعات)</field>
+        <field name="res_model">office.client.transaction.line</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="search_view_id" ref="view_transaction_line_search"/>
+        <field name="context">{'search_default_group_by_factory': 1, 'search_default_group_by_month': 1}</field>
+    </record>
+
+</odoo>

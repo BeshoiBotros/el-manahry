@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top Menu Item -->
+    <menuitem id="menu_office_clients_root"
+              name="Client Cards"
+              sequence="10"/>
+
+    <!-- App Menus -->
+    <menuitem id="menu_office_clients"
+              name="Clients"
+              parent="menu_office_clients_root"
+              action="action_office_client"
+              sequence="10"/>
+
+    <menuitem id="menu_office_invoices"
+              name="Invoices (الفواتير)"
+              parent="menu_office_clients_root"
+              action="action_client_invoices"
+              sequence="20"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_returns"
+              name="Returns (مرتجعات)"
+              parent="menu_office_clients_root"
+              action="action_client_returns"
+              sequence="22"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_payments"
+              name="Payments (المقبوضات)"
+              parent="menu_office_clients_root"
+              action="action_client_payments"
+              sequence="25"/>
+
+
+    <menuitem id="menu_office_products"
+              name="Products"
+              parent="menu_office_clients_root"
+              action="action_office_product"
+              sequence="40"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_transactions_all"
+              name="All History"
+              parent="menu_office_clients_root"
+              action="action_client_transaction"
+              sequence="50"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_analysis"
+              name="Sales Analysis (التقارير)"
+              parent="menu_office_clients_root"
+              action="action_transaction_analysis"
+              sequence="60"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_yearly_discounts"
+              name="Yearly Discounts (الخصومات السنوية)"
+              parent="menu_office_clients_root"
+              action="action_yearly_discounts"
+              sequence="70"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_expenses"
+              name="Office Expenses (مصروفات المكتب)"
+              parent="menu_office_clients_root"
+              action="action_office_expense"
+              sequence="80"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_profit_report"
+              name="Profit Report (تقرير الأرباح)"
+              parent="menu_office_clients_root"
+              action="action_office_profit_report"
+              sequence="90"
+              groups="office_client_cards.group_office_client_manager"/>
+
+</odoo>
