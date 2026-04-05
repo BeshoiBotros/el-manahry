@@ -31,6 +31,8 @@ class OfficeClientTransaction(models.Model):
     line_ids = fields.One2many('office.client.transaction.line', 'transaction_id', string='Invoice Lines')
     total_office_profit = fields.Float(string='Total Office Profit', compute='_compute_totals', store=True)
     total_factory_share = fields.Float(string='Total Factory Share', compute='_compute_totals', store=True)
+    total_perfume_share = fields.Float(string='Total Perfume Share', compute='_compute_totals', store=True)
+    total_eclador_share = fields.Float(string='Total Eclador Share', compute='_compute_totals', store=True)
 
     @api.depends('line_ids.subtotal', 'transaction_type')
     def _compute_amount(self):
@@ -88,13 +90,23 @@ class OfficeClientTransaction(models.Model):
                 base_office_profit = abs(sum(record.line_ids.mapped('office_profit')))
                 base_factory_share = abs(sum(record.line_ids.mapped('factory_share')))
                 
+                perfume_lines = record.line_ids.filtered(lambda l: l.factory_type == 'perfume')
+                eclador_lines = record.line_ids.filtered(lambda l: l.factory_type == 'eclador')
+                
+                base_perfume_share = abs(sum(perfume_lines.mapped('factory_share')))
+                base_eclador_share = abs(sum(eclador_lines.mapped('factory_share')))
+                
                 # Office discount reduces office profit
                 record.total_office_profit = base_office_profit - record.office_discount_amount
                 # Factory discounts reduce factory share
                 record.total_factory_share = base_factory_share - (record.perfume_discount_amount + record.eclador_discount_amount)
+                record.total_perfume_share = base_perfume_share - record.perfume_discount_amount
+                record.total_eclador_share = base_eclador_share - record.eclador_discount_amount
             else:
                 record.total_office_profit = 0.0
                 record.total_factory_share = 0.0
+                record.total_perfume_share = 0.0
+                record.total_eclador_share = 0.0
 
     @api.depends('amount', 'total_discount_amount', 'transaction_type')
     def _compute_net_amount(self):

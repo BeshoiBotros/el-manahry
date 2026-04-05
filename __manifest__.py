@@ -17,6 +17,7 @@
         'views/office_product_views.xml',
         'views/client_transaction_views.xml',
         'views/office_expense_views.xml',
+        'views/factory_account_views.xml',
         'views/menus.xml',
     ],
     'installable': True,

@@ -13,3 +13,5 @@ access_office_expense_user,office.expense.user,model_office_expense,group_office
 access_office_expense_manager,office.expense.manager,model_office_expense,group_office_client_manager,1,1,1,1
 access_office_profit_report_user,office.profit.report.user,model_office_profit_report,group_office_client_user,1,0,0,0
 access_office_profit_report_manager,office.profit.report.manager,model_office_profit_report,group_office_client_manager,1,0,0,0
+access_office_factory_manager,office.factory.manager,model_office_factory,group_office_client_manager,1,1,1,1
+access_office_factory_payment_manager,office.factory_payment.manager,model_office_factory_payment,group_office_client_manager,1,1,1,1
