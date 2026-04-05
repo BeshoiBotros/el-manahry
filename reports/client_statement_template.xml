@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Action to trigger the PDF Report -->
+    <record id="action_report_client_statement" model="ir.actions.report">
+        <field name="name">Client Statement (كشف حساب عميل)</field>
+        <field name="model">office.client</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">office_client_cards.report_client_statement</field>
+        <field name="report_file">office_client_cards.report_client_statement</field>
+        <field name="print_report_name">'Statement - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="office_client_cards.model_office_client"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_client_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="direction: rtl; text-align: right;">
+                        <h2 class="text-center mb-4">كشف حساب عميل / Client Statement</h2>
+                        
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>اسم العميل:</strong> <span t-field="doc.name"/><br/>
+                                <t t-if="doc.phone">
+                                    <strong>رقم الهاتف:</strong> <span t-field="doc.phone"/><br/>
+                                </t>
+                            </div>
+                            <div class="col-6 text-left" style="text-align: left;">
+                                <strong>الرصيد المتبقي (Total Debt):</strong> 
+                                <span t-esc="'{0:,.2f}'.format(doc.total_debt)"/> ج.م 
+                                <br/>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4 mb-2">تفاصيل الحركات (Transactions History)</h4>
+                        <table class="table table-sm table-bordered mt-3">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th>التاريخ (Date)</th>
+                                    <th>البيان (Description)</th>
+                                    <th>نوع الحركة (Type)</th>
+                                    <th>القيمة (Amount)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.transaction_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.date"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td><span t-field="line.transaction_type"/></td>
+                                        <td>
+                                            <t t-if="line.transaction_type in ('invoice', 'opening_balance')">
+                                                <span t-esc="'{0:,.2f}'.format(line.net_amount)" style="color: red; font-weight: bold;"/> ج.م
+                                            </t>
+                                            <t t-else="">
+                                                <span t-esc="'{0:,.2f}'.format(line.net_amount)" style="color: green; font-weight: bold;"/> ج.م (سداد/خصم)
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <div class="row mt-5">
+                            <div class="col-12 text-center text-muted">
+                                تم إصدار هذا الكشف تلقائياً من النظام.
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

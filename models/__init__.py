@@ -6,3 +6,4 @@ from . import yearly_discount_report
 from . import office_expense
 from . import office_profit_report
 from . import factory_account
+from . import office_dashboard

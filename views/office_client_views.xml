@@ -7,6 +7,9 @@
         <field name="model">office.client</field>
         <field name="arch" type="xml">
             <form string="Office Client">
+                <header>
+                    <button name="%(action_report_client_statement)d" string="Print Statement (طباعة كشف الحساب)" type="action" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>

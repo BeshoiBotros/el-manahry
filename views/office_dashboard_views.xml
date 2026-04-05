@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_office_dashboard_form" model="ir.ui.view">
+        <field name="name">office.dashboard.form</field>
+        <field name="model">office.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard" create="false" edit="false" delete="false">
+                <sheet>
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="color: #2F4F4F;">لوحة التحكم الشاملة - Manager Dashboard</h1>
+                        <p class="text-muted">إحصائيات فورية لحالة المكتب المادية (تُحدث لحظياً)</p>
+                    </div>
+
+                    <div class="row text-center mt-4">
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white" style="padding: 20px; border-radius: 10px;">
+                                <h4>تحصيلات الشهر</h4>
+                                <h2><field name="total_monthly_collections" readonly="1"/> ج.م</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white" style="padding: 20px; border-radius: 10px;">
+                                <h4>أرباح الشهر</h4>
+                                <h2><field name="total_monthly_profit" readonly="1"/> ج.م</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-dark" style="padding: 20px; border-radius: 10px;">
+                                <h4>الديون بالسوق</h4>
+                                <h2><field name="total_market_debt" readonly="1"/> ج.م</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-danger text-white" style="padding: 20px; border-radius: 10px;">
+                                <h4>ديون المصانع</h4>
+                                <h2><field name="total_factory_debt" readonly="1"/> ج.م</h2>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_office_dashboard" model="ir.actions.server">
+        <field name="name">Dashboard (الرئيسية)</field>
+        <field name="model_id" ref="office_client_cards.model_office_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">
+            # Ensure a record exists
+            record = env['office.dashboard'].create({})
+            action = {
+                'type': 'ir.actions.act_window',
+                'name': 'Dashboard (الرئيسية)',
+                'res_model': 'office.dashboard',
+                'res_id': record.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        </field>
+    </record>
+
+</odoo>

@@ -13,11 +13,13 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'reports/client_statement_template.xml',
         'views/office_client_views.xml',
         'views/office_product_views.xml',
         'views/client_transaction_views.xml',
         'views/office_expense_views.xml',
         'views/factory_account_views.xml',
+        'views/office_dashboard_views.xml',
         'views/menus.xml',
     ],
     'installable': True,

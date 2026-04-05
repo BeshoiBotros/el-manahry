@@ -7,6 +7,13 @@
               sequence="10"/>
 
     <!-- App Menus -->
+    <menuitem id="menu_office_dashboard"
+              name="Dashboard (الرئيسية)"
+              parent="menu_office_clients_root"
+              action="action_office_dashboard"
+              sequence="5"
+              groups="office_client_cards.group_office_client_manager"/>
+
     <menuitem id="menu_office_clients"
               name="Clients"
               parent="menu_office_clients_root"
