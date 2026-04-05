@@ -79,6 +79,8 @@
                 <filter string="Invoices" name="type_invoice" domain="[('transaction_type', '=', 'invoice')]"/>
                 <filter string="Returns" name="type_return" domain="[('transaction_type', '=', 'return')]"/>
                 <filter string="Payments" name="type_payment" domain="[('transaction_type', '=', 'payment')]"/>
+                <filter string="Adjustments/Gifts" name="type_adjustment" domain="[('transaction_type', '=', 'adjustment')]"/>
+                <filter string="Opening Balances" name="type_opening_balance" domain="[('transaction_type', '=', 'opening_balance')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Client" name="group_by_client" context="{'group_by':'client_id'}"/>
                     <filter string="Date" name="group_by_date" context="{'group_by':'date'}"/>
@@ -114,6 +116,15 @@
         <field name="context">{'default_transaction_type': 'return', 'search_default_type_return': 1}</field>
     </record>
 
+    <!-- Action: Adjustments/Gifts (Managers) -->
+    <record id="action_client_adjustments" model="ir.actions.act_window">
+        <field name="name">Adjustments/Gifts (تسويات/عيديات)</field>
+        <field name="res_model">office.client.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('transaction_type', '=', 'adjustment')]</field>
+        <field name="context">{'default_transaction_type': 'adjustment', 'search_default_type_adjustment': 1}</field>
+    </record>
+
     <!-- Action: Payments Only -->
     <record id="action_client_payments" model="ir.actions.act_window">
         <field name="name">Payments (المقبوضات)</field>
@@ -121,6 +132,15 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('transaction_type', '=', 'payment')]</field>
         <field name="context">{'default_transaction_type': 'payment', 'search_default_type_payment': 1}</field>
+    </record>
+
+    <!-- Action: Opening Balances (Managers) -->
+    <record id="action_client_opening_balances" model="ir.actions.act_window">
+        <field name="name">Opening Balances (أرصدة أول المدة)</field>
+        <field name="res_model">office.client.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('transaction_type', '=', 'opening_balance')]</field>
+        <field name="context">{'default_transaction_type': 'opening_balance', 'search_default_type_opening_balance': 1}</field>
     </record>
 
 

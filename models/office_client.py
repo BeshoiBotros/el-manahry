@@ -84,9 +84,9 @@ class OfficeClient(models.Model):
         for client in self:
             debt = 0.0
             for transaction in client.transaction_ids:
-                if transaction.transaction_type == 'invoice':
+                if transaction.transaction_type in ('invoice', 'opening_balance'):
                     debt += transaction.net_amount
-                elif transaction.transaction_type in ('payment', 'return'):
+                elif transaction.transaction_type in ('payment', 'return', 'adjustment'):
                     debt -= transaction.net_amount
             client.total_debt = debt
 

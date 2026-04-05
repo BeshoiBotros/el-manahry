@@ -20,11 +20,25 @@
               sequence="20"
               groups="office_client_cards.group_office_client_manager"/>
 
+    <menuitem id="menu_office_opening_balances"
+              name="Opening Balances (أرصدة أول المدة)"
+              parent="menu_office_clients_root"
+              action="action_client_opening_balances"
+              sequence="21"
+              groups="office_client_cards.group_office_client_manager"/>
+
     <menuitem id="menu_office_returns"
               name="Returns (مرتجعات)"
               parent="menu_office_clients_root"
               action="action_client_returns"
               sequence="22"
+              groups="office_client_cards.group_office_client_manager"/>
+
+    <menuitem id="menu_office_adjustments"
+              name="Adjustments/Gifts (تسويات/عيديات)"
+              parent="menu_office_clients_root"
+              action="action_client_adjustments"
+              sequence="24"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_payments"

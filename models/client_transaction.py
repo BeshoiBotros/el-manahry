@@ -12,7 +12,9 @@ class OfficeClientTransaction(models.Model):
     transaction_type = fields.Selection([
         ('invoice', 'Invoice'),
         ('return', 'Return (إشعار مرتجع)'),
-        ('payment', 'Payment')
+        ('payment', 'Payment'),
+        ('adjustment', 'Adjustment/Gift (تسوية/عيدية)'),
+        ('opening_balance', 'Opening Balance (رصيد أول المدة)')
     ], string='Type', required=True, default='invoice')
 
     amount = fields.Float(string='Amount', compute='_compute_amount', store=True, readonly=False)
@@ -99,7 +101,7 @@ class OfficeClientTransaction(models.Model):
         for record in self:
             if record.transaction_type in ('invoice', 'return'):
                 record.net_amount = record.amount - record.total_discount_amount
-            elif record.transaction_type == 'payment':
+            elif record.transaction_type in ('payment', 'adjustment', 'opening_balance'):
                 record.net_amount = record.amount
 
     @api.constrains('amount')
@@ -111,13 +113,13 @@ class OfficeClientTransaction(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('transaction_type') in ('invoice', 'return'):
+            if vals.get('transaction_type') in ('invoice', 'return', 'adjustment', 'opening_balance'):
                 if not self.env.user.has_group('office_client_cards.group_office_client_manager'):
-                    raise ValidationError("Only Managers are allowed to create Invoices and Returns.")
+                    raise ValidationError("Only Managers are allowed to create Invoices, Returns, Adjustments, or Opening Balances.")
         return super(OfficeClientTransaction, self).create(vals_list)
 
     def write(self, vals):
-        if 'transaction_type' in vals and vals['transaction_type'] in ('invoice', 'return'):
+        if 'transaction_type' in vals and vals['transaction_type'] in ('invoice', 'return', 'adjustment', 'opening_balance'):
             if not self.env.user.has_group('office_client_cards.group_office_client_manager'):
-                raise ValidationError("Only Managers are allowed to change type to Invoice or Return.")
+                raise ValidationError("Only Managers are allowed to change type to Invoice, Return, Adjustment, or Opening Balance.")
         return super(OfficeClientTransaction, self).write(vals)
