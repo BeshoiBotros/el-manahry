@@ -25,14 +25,17 @@ class OfficeProfitReport(models.Model):
     # Net profit
     net_profit = fields.Float(string='Net Profit (صافي الربح)', readonly=True)
 
+    factory_payments = fields.Float(string='Paid to Factory (المورد للمصانع)', readonly=True)
+    net_factory_share = fields.Float(string='Net Factory Share (المتبقي للمصانع)', readonly=True)
+
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         sql = """
             CREATE OR REPLACE VIEW {table} AS (
                 SELECT
                     row_number() OVER () AS id,
-                    COALESCE(inv.year, exp.year)    AS year,
-                    COALESCE(inv.month, exp.month)  AS month,
+                    COALESCE(inv.year, COALESCE(exp.year, fpay.year))    AS year,
+                    COALESCE(inv.month, COALESCE(exp.month, fpay.month))  AS month,
 
                     COALESCE(inv.total_invoices, 0)       AS total_invoices,
                     COALESCE(inv.total_office_profit, 0)  AS total_office_profit,
@@ -44,17 +47,20 @@ class OfficeProfitReport(models.Model):
                     COALESCE(exp.transport, 0)  AS transport_expenses,
                     COALESCE(exp.other, 0)      AS other_expenses,
                     COALESCE(exp.total, 0)      AS total_expenses,
+                    
+                    COALESCE(fpay.total_payments, 0) AS factory_payments,
 
-                    COALESCE(inv.total_office_profit, 0) - COALESCE(exp.total, 0) AS net_profit
+                    COALESCE(inv.total_office_profit, 0) - COALESCE(exp.total, 0) AS net_profit,
+                    COALESCE(inv.total_factory_share, 0) - COALESCE(fpay.total_payments, 0) AS net_factory_share
 
                 FROM (
                     -- Aggregate invoice and return line profits per month
                     SELECT
                         to_char(t.date, 'YYYY')    AS year,
                         to_char(t.date, 'YYYY-MM') AS month,
-                        SUM(l.subtotal)             AS total_invoices,
-                        SUM(l.office_profit)        AS total_office_profit,
-                        SUM(l.factory_share)        AS total_factory_share
+                        SUM(CASE WHEN t.transaction_type = 'return' THEN -l.subtotal ELSE l.subtotal END) AS total_invoices,
+                        SUM(CASE WHEN t.transaction_type = 'return' THEN -l.office_profit ELSE l.office_profit END) AS total_office_profit,
+                        SUM(CASE WHEN t.transaction_type = 'return' THEN -l.factory_share ELSE l.factory_share END) AS total_factory_share
                     FROM office_client_transaction t
                     JOIN office_client_transaction_line l ON l.transaction_id = t.id
                     WHERE t.transaction_type IN ('invoice', 'return')
@@ -79,6 +85,18 @@ class OfficeProfitReport(models.Model):
                         to_char(date, 'YYYY'),
                         to_char(date, 'YYYY-MM')
                 ) exp ON exp.month = inv.month
+                
+                FULL OUTER JOIN (
+                    -- Aggregate Factory Payments
+                    SELECT
+                        to_char(date, 'YYYY')    AS year,
+                        to_char(date, 'YYYY-MM') AS month,
+                        SUM(amount)              AS total_payments
+                    FROM office_factory_payment
+                    GROUP BY
+                        to_char(date, 'YYYY'),
+                        to_char(date, 'YYYY-MM')
+                ) fpay ON fpay.month = COALESCE(inv.month, exp.month)
             )
         """.format(table=self._table)
         self.env.cr.execute(sql)

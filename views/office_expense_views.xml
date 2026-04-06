@@ -130,6 +130,8 @@
                 <field name="total_invoices"      sum="Total Invoiced"       string="Total Invoiced"/>
                 <field name="total_office_profit" sum="Gross Office Profit"  string="Gross Profit (ربح إجمالي)" decoration-info="total_office_profit &gt; 0"/>
                 <field name="total_factory_share" sum="Factory Share"        string="Factory Share" optional="show"/>
+                <field name="factory_payments" sum="Total Paid"        string="Paid to Factory" optional="show"/>
+                <field name="net_factory_share" sum="Remaining Share"        string="Net Factory Share" optional="show" decoration-danger="net_factory_share &gt; 0"/>
 
                 <!-- Expenses breakdown -->
                 <field name="labor_expenses"     sum="Labor"     string="Labor / عمالة"    optional="show"/>
@@ -154,6 +156,9 @@
             <pivot string="Profit Report Pivot">
                 <field name="month"               type="row"/>
                 <field name="total_office_profit" type="measure" string="Gross Profit"/>
+                <field name="total_factory_share" type="measure" string="Factory Share"/>
+                <field name="factory_payments" type="measure" string="Paid to Factory"/>
+                <field name="net_factory_share" type="measure" string="Remaining Share"/>
                 <field name="total_expenses"      type="measure" string="Total Expenses"/>
                 <field name="net_profit"          type="measure" string="Net Profit"/>
                 <field name="labor_expenses"      type="measure" string="Labor"/>
