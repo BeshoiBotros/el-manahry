@@ -29,7 +29,7 @@
                         </group>
                     </group>
                     <notebook invisible="transaction_type not in ('invoice', 'return')">
-                        <page string="Invoice Lines">
+                        <page string="المنتجات المباعة">
                             <field name="line_ids">
                                 <tree editable="bottom">
                                     <field name="product_id"/>
@@ -56,7 +56,7 @@
         <field name="name">office.client.transaction.tree</field>
         <field name="model">office.client.transaction</field>
         <field name="arch" type="xml">
-            <tree string="Transactions" default_order="date desc, id desc">
+            <tree string="الحركات" default_order="date desc, id desc">
                 <field name="date"/>
                 <field name="client_id"/>
                 <field name="name"/>
@@ -72,19 +72,19 @@
         <field name="name">office.client.transaction.search</field>
         <field name="model">office.client.transaction</field>
         <field name="arch" type="xml">
-            <search string="Transactions">
+            <search string="الحركات">
                 <field name="client_id"/>
                 <field name="name"/>
                 <field name="date"/>
                 <filter string="Invoices" name="type_invoice" domain="[('transaction_type', '=', 'invoice')]"/>
                 <filter string="Returns" name="type_return" domain="[('transaction_type', '=', 'return')]"/>
-                <filter string="Payments" name="type_payment" domain="[('transaction_type', '=', 'payment')]"/>
+                <filter string="التحصيلات" name="type_payment" domain="[('transaction_type', '=', 'payment')]"/>
                 <filter string="Adjustments/Gifts" name="type_adjustment" domain="[('transaction_type', '=', 'adjustment')]"/>
                 <filter string="Opening Balances" name="type_opening_balance" domain="[('transaction_type', '=', 'opening_balance')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Client" name="group_by_client" context="{'group_by':'client_id'}"/>
-                    <filter string="Date" name="group_by_date" context="{'group_by':'date'}"/>
-                    <filter string="Type" name="group_by_type" context="{'group_by':'transaction_type'}"/>
+                <group expand="0" string="تجميع حسب">
+                    <filter string="العميل" name="group_by_client" context="{'group_by':'client_id'}"/>
+                    <filter string="التاريخ" name="group_by_date" context="{'group_by':'date'}"/>
+                    <filter string="نوع الحركة" name="group_by_type" context="{'group_by':'transaction_type'}"/>
                 </group>
             </search>
         </field>
@@ -180,9 +180,9 @@
                 <field name="transaction_date"/>
                 <filter string="Perfume" name="factory_perfume" domain="[('factory_type', '=', 'perfume')]"/>
                 <filter string="Eclador" name="factory_eclador" domain="[('factory_type', '=', 'eclador')]"/>
-                <group expand="0" string="Group By">
+                <group expand="0" string="تجميع حسب">
                     <filter string="Factory" name="group_by_factory" context="{'group_by':'factory_type'}"/>
-                    <filter string="Product" name="group_by_product" context="{'group_by':'product_id'}"/>
+                    <filter string="المنتج" name="group_by_product" context="{'group_by':'product_id'}"/>
                     <filter string="Month" name="group_by_month" context="{'group_by':'transaction_date:month'}"/>
                 </group>
             </search>
@@ -201,8 +201,8 @@
                 <field name="quantity" sum="Total Quantity"/>
                 <field name="price_unit"/>
                 <field name="subtotal" sum="Total Sales"/>
-                <field name="office_profit" sum="Total Office Profit" groups="office_client_cards.group_office_client_manager"/>
-                <field name="factory_share" sum="Total Factory Share" groups="office_client_cards.group_office_client_manager"/>
+                <field name="office_profit" sum="ربح المكتب الإجمالي" groups="office_client_cards.group_office_client_manager"/>
+                <field name="factory_share" sum="إجمالي حصة المصانع" groups="office_client_cards.group_office_client_manager"/>
             </tree>
         </field>
     </record>

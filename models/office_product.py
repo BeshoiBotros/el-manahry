@@ -4,7 +4,7 @@ class OfficeProduct(models.Model):
     _name = 'office.product'
     _description = 'Office Product'
     
-    name = fields.Char(string='Product Name', required=True)
+    name = fields.Char(string='اسم المنتج', required=True)
     list_price = fields.Float(string='Sales Price', default=0.0)
     
     profit_type = fields.Selection([
@@ -17,4 +17,4 @@ class OfficeProduct(models.Model):
     factory_type = fields.Selection([
         ('perfume', 'Perfume (برفان)'),
         ('eclador', 'Eclador (أكلادور)')
-    ], string='Factory Type', required=True, default='perfume')
+    ], string='المصنع', required=True, default='perfume')

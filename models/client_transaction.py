@@ -6,33 +6,33 @@ class OfficeClientTransaction(models.Model):
     _description = 'Client Transaction'
     _order = 'date desc, id desc'
 
-    client_id = fields.Many2one('office.client', string='Client', required=True, ondelete='cascade')
-    date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
-    name = fields.Char(string='Description', required=True)
+    client_id = fields.Many2one('office.client', string='العميل', required=True, ondelete='cascade')
+    date = fields.Date(string='التاريخ', default=fields.Date.context_today, required=True)
+    name = fields.Char(string='البيان', required=True)
     transaction_type = fields.Selection([
-        ('invoice', 'Invoice'),
-        ('return', 'Return (إشعار مرتجع)'),
-        ('payment', 'Payment'),
-        ('adjustment', 'Adjustment/Gift (تسوية/عيدية)'),
-        ('opening_balance', 'Opening Balance (رصيد أول المدة)')
-    ], string='Type', required=True, default='invoice')
+        ('invoice', 'فاتورة'),
+        ('return', 'مرتجع'),
+        ('payment', 'تحصيل'),
+        ('adjustment', 'تسوية/عيدية'),
+        ('opening_balance', 'رصيد سابق')
+    ], string='نوع الحركة', required=True, default='invoice')
 
-    amount = fields.Float(string='Amount', compute='_compute_amount', store=True, readonly=False)
-    discount_percentage = fields.Float(string='Discount (%)', compute='_compute_discount_percentage', store=True, readonly=False)
+    amount = fields.Float(string='القيمة', compute='_compute_amount', store=True, readonly=False)
+    discount_percentage = fields.Float(string='الخصم (%)', compute='_compute_discount_percentage', store=True, readonly=False)
     
     # Split Discount Amounts
-    office_discount_amount = fields.Float(string='Office Discount', compute='_compute_discount_amounts', store=True)
-    perfume_discount_amount = fields.Float(string='Perfume Discount', compute='_compute_discount_amounts', store=True)
-    eclador_discount_amount = fields.Float(string='Eclador Discount', compute='_compute_discount_amounts', store=True)
-    total_discount_amount = fields.Float(string='Total Discount', compute='_compute_discount_amounts', store=True)
+    office_discount_amount = fields.Float(string='خصم المكتب', compute='_compute_discount_amounts', store=True)
+    perfume_discount_amount = fields.Float(string='خصم البرفان', compute='_compute_discount_amounts', store=True)
+    eclador_discount_amount = fields.Float(string='خصم إكلادور', compute='_compute_discount_amounts', store=True)
+    total_discount_amount = fields.Float(string='إجمالي الخصم', compute='_compute_discount_amounts', store=True)
     
-    net_amount = fields.Float(string='Net Amount', compute='_compute_net_amount', store=True)
+    net_amount = fields.Float(string='الصافي', compute='_compute_net_amount', store=True)
 
-    line_ids = fields.One2many('office.client.transaction.line', 'transaction_id', string='Invoice Lines')
-    total_office_profit = fields.Float(string='Total Office Profit', compute='_compute_totals', store=True)
-    total_factory_share = fields.Float(string='Total Factory Share', compute='_compute_totals', store=True)
-    total_perfume_share = fields.Float(string='Total Perfume Share', compute='_compute_totals', store=True)
-    total_eclador_share = fields.Float(string='Total Eclador Share', compute='_compute_totals', store=True)
+    line_ids = fields.One2many('office.client.transaction.line', 'transaction_id', string='المنتجات المباعة')
+    total_office_profit = fields.Float(string='ربح المكتب الإجمالي', compute='_compute_totals', store=True)
+    total_factory_share = fields.Float(string='إجمالي حصة المصانع', compute='_compute_totals', store=True)
+    total_perfume_share = fields.Float(string='إجمالي البرفان', compute='_compute_totals', store=True)
+    total_eclador_share = fields.Float(string='إجمالي الإكلادور', compute='_compute_totals', store=True)
 
     @api.depends('line_ids.subtotal', 'transaction_type')
     def _compute_amount(self):

@@ -3,25 +3,25 @@ from odoo import models, fields, api
 
 class OfficeExpense(models.Model):
     _name = 'office.expense'
-    _description = 'Office Expense'
+    _description = 'مصروف المكتب'
     _order = 'date desc, id desc'
 
     name = fields.Char(string='Description (وصف المصروف)', required=True)
     date = fields.Date(
-        string='Date',
+        string='التاريخ',
         default=fields.Date.context_today,
         required=True
     )
     expense_type = fields.Selection([
-        ('labor',     'Labor / عمالة'),
+        ('labor',     'العمالة'),
         ('server',    'Server Costs / مصروفات سيرفر'),
-        ('porter',    'Porters / شيالين'),
+        ('porter',    'الشيالين'),
         ('transport', 'Transport / نقل منتجات'),
-        ('other',     'Other / أخرى'),
-    ], string='Expense Type', required=True, default='other')
+        ('other',     'أخرى'),
+    ], string='نوع المصروف', required=True, default='other')
 
-    amount = fields.Float(string='Amount', required=True)
-    notes = fields.Text(string='Notes')
+    amount = fields.Float(string='القيمة', required=True)
+    notes = fields.Text(string='ملاحظات')
 
     # Convenience computed fields for grouping
     month = fields.Char(
@@ -30,7 +30,7 @@ class OfficeExpense(models.Model):
         store=True
     )
     year = fields.Char(
-        string='Year',
+        string='السنة',
         compute='_compute_period',
         store=True
     )

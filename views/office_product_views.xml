@@ -4,11 +4,11 @@
         <field name="name">office.product.form</field>
         <field name="model">office.product</field>
         <field name="arch" type="xml">
-            <form string="Product">
+            <form string="المنتج">
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Product Name"/>
+                            <field name="name" placeholder="اسم المنتج"/>
                         </h1>
                     </div>
                     <group>
@@ -30,7 +30,7 @@
         <field name="name">office.product.tree</field>
         <field name="model">office.product</field>
         <field name="arch" type="xml">
-            <tree string="Products">
+            <tree string="المنتجات">
                 <field name="name"/>
                 <field name="factory_type"/>
                 <field name="list_price"/>

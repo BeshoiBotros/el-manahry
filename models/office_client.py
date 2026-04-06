@@ -4,58 +4,58 @@ class OfficeClient(models.Model):
     _name = 'office.client'
     _description = 'Office Client'
     
-    name = fields.Char(string='Client Name', required=True)
-    phone = fields.Char(string='Phone')
-    email = fields.Char(string='Email')
+    name = fields.Char(string='اسم العميل', required=True)
+    phone = fields.Char(string='رقم الهاتف')
+    email = fields.Char(string='البريد الإلكتروني')
     
     discount_type = fields.Selection([
-        ('none', 'No Discount'),
-        ('yearly', 'Yearly Discount'),
-        ('per_invoice', 'Per Invoice Discount')
-    ], string='Discount Type', default='none', required=True)
+        ('none', 'بدون خصم'),
+        ('yearly', 'خصم سنوي'),
+        ('per_invoice', 'خصم على الفاتورة')
+    ], string='نوع الخصم', default='none', required=True)
     
-    user_id = fields.Many2one('res.users', string='Salesperson (المندوب)', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='المندوب', default=lambda self: self.env.user)
 
     # Total discount % agreed with the client (manually entered, e.g. 6%)
     yearly_discount_percentage = fields.Float(
-        string='Total Discount (%)',
+        string='إجمالي الخصم (%)',
         help='The total discount percentage agreed with the client (e.g. 6%). Applies to both Yearly and Per Invoice.'
     )
 
     # --- Sub-percentages, each applied to a DIFFERENT base ---
     # Office portion
     discount_office_percentage = fields.Float(
-        string='Office Discount (%)',
+        string='خصم المكتب (%)',
         help='The percentage borne by the Office (applied to total amount)'
     )
     # Perfume factory portion
     discount_perfume_percentage = fields.Float(
-        string='Perfume Factory Discount (%)',
+        string='خصم مصنع البرفان (%)',
         help='The percentage borne by Perfume Factory (applied to perfume amount)'
     )
     # Eclador factory portion
     discount_eclador_percentage = fields.Float(
-        string='Eclador Factory Discount (%)',
+        string='خصم مصنع إكلادور (%)',
         help='The percentage borne by Eclador Factory (applied to eclador amount)'
     )
 
     transaction_ids = fields.One2many('office.client.transaction', 'client_id', string='Transactions')
     
-    total_debt = fields.Float(string='Total Debt', compute='_compute_total_debt', store=True)
+    total_debt = fields.Float(string='المديونية الحالية', compute='_compute_total_debt', store=True)
     
     # --- Yearly Stats (current year) ---
     current_year_collections_total = fields.Float(
-        string='Current Year Collections',
+        string='تحصيلات العام الحالي',
         compute='_compute_yearly_stats', store=True
     )
     # Office pays this amount from their own share
     current_year_office_discount = fields.Float(
-        string='Office Discount Amount (المكتب يدفع)',
+        string='قيمة الخصم من المكتب',
         compute='_compute_yearly_stats', store=True
     )
     # Perfume factory owes this to the office
     yearly_perfume_invoices_total = fields.Float(
-        string='Perfume Factory Annual Invoices',
+        string='مسحوبات البرفان السنوية',
         compute='_compute_yearly_stats', store=True
     )
     yearly_perfume_discount_owed = fields.Float(

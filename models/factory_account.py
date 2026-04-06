@@ -2,20 +2,20 @@ from odoo import models, fields, api
 
 class OfficeFactory(models.Model):
     _name = 'office.factory'
-    _description = 'Factory Ledger'
+    _description = 'حسابات المصانع'
     
-    name = fields.Char(string='Factory Name', required=True)
+    name = fields.Char(string='اسم المصنع', required=True)
     factory_type = fields.Selection([
-        ('perfume', 'Perfume Factory (مصنع البرفان)'),
-        ('eclador', 'Eclador Factory (مصنع الاكلادور)')
-    ], string='Factory Type', required=True, unique=True)
+        ('perfume', 'مصنع البرفان'),
+        ('eclador', 'مصنع الإكلادور')
+    ], string='المصنع', required=True, unique=True)
     
-    payment_ids = fields.One2many('office.factory.payment', 'factory_id', string='Payments (المسدد)')
+    payment_ids = fields.One2many('office.factory.payment', 'factory_id', string='المسدد للمصنع')
     
-    total_factory_debt = fields.Float(string='Remaining Debt (المتبقي)', compute='_compute_factory_debt', store=False)
-    total_factory_invoices = fields.Float(string='Total Shares (اجمالي المستحقات)', compute='_compute_factory_debt', store=False)
-    total_factory_returns = fields.Float(string='Total Returns (إجمالي المرتجعات)', compute='_compute_factory_debt', store=False)
-    total_factory_payments = fields.Float(string='Total Paid (إجمالي المسدد)', compute='_compute_factory_debt', store=False)
+    total_factory_debt = fields.Float(string='الرصيد المتبقي', compute='_compute_factory_debt', store=False)
+    total_factory_invoices = fields.Float(string='إجمالي الحصص', compute='_compute_factory_debt', store=False)
+    total_factory_returns = fields.Float(string='إجمالي المرتجعات', compute='_compute_factory_debt', store=False)
+    total_factory_payments = fields.Float(string='إجمالي المسدد', compute='_compute_factory_debt', store=False)
 
     def _compute_factory_debt(self):
         for factory in self:
@@ -48,10 +48,10 @@ class OfficeFactory(models.Model):
 
 class OfficeFactoryPayment(models.Model):
     _name = 'office.factory.payment'
-    _description = 'Factory Payment'
+    _description = 'دفعة للمصنع'
     _order = 'date desc, id desc'
 
     factory_id = fields.Many2one('office.factory', string='Factory', required=True, ondelete='cascade')
-    date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
-    name = fields.Char(string='Description', required=True)
-    amount = fields.Float(string='Amount', required=True)
+    date = fields.Date(string='التاريخ', default=fields.Date.context_today, required=True)
+    name = fields.Char(string='البيان', required=True)
+    amount = fields.Float(string='القيمة', required=True)

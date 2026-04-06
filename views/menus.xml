@@ -3,81 +3,81 @@
 
     <!-- Top Menu Item -->
     <menuitem id="menu_office_clients_root"
-              name="Client Cards"
+              name="كروت العملاء"
               sequence="10"/>
 
     <!-- App Menus -->
     <menuitem id="menu_office_dashboard"
-              name="Dashboard (الرئيسية)"
+              name="الرئيسية"
               parent="menu_office_clients_root"
               action="action_office_dashboard"
               sequence="5"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_clients"
-              name="Clients"
+              name="العملاء"
               parent="menu_office_clients_root"
               action="action_office_client"
               sequence="10"/>
 
     <menuitem id="menu_office_invoices"
-              name="Invoices (الفواتير)"
+              name="الفواتير"
               parent="menu_office_clients_root"
               action="action_client_invoices"
               sequence="20"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_opening_balances"
-              name="Opening Balances (أرصدة أول المدة)"
+              name="أرصدة أول المدة"
               parent="menu_office_clients_root"
               action="action_client_opening_balances"
               sequence="21"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_returns"
-              name="Returns (مرتجعات)"
+              name="المرتجعات"
               parent="menu_office_clients_root"
               action="action_client_returns"
               sequence="22"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_adjustments"
-              name="Adjustments/Gifts (تسويات/عيديات)"
+              name="التسويات والهدايا"
               parent="menu_office_clients_root"
               action="action_client_adjustments"
               sequence="24"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_payments"
-              name="Payments (المقبوضات)"
+              name="التحصيلات"
               parent="menu_office_clients_root"
               action="action_client_payments"
               sequence="25"/>
 
 
     <menuitem id="menu_office_products"
-              name="Products"
+              name="المنتجات"
               parent="menu_office_clients_root"
               action="action_office_product"
               sequence="40"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_factory"
-              name="Factory Accounts (حسابات المصانع)"
+              name="حسابات المصانع"
               parent="menu_office_clients_root"
               action="action_office_factory"
               sequence="45"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_transactions_all"
-              name="All History"
+              name="سجل الحركات"
               parent="menu_office_clients_root"
               action="action_client_transaction"
               sequence="50"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_analysis"
-              name="Sales Analysis (التقارير)"
+              name="تحليل المبيعات"
               parent="menu_office_clients_root"
               action="action_transaction_analysis"
               sequence="60"
@@ -91,14 +91,14 @@
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_expenses"
-              name="Office Expenses (مصروفات المكتب)"
+              name="المصروفات"
               parent="menu_office_clients_root"
               action="action_office_expense"
               sequence="80"
               groups="office_client_cards.group_office_client_manager"/>
 
     <menuitem id="menu_office_profit_report"
-              name="Profit Report (تقرير الأرباح)"
+              name="تقرير الأرباح"
               parent="menu_office_clients_root"
               action="action_office_profit_report"
               sequence="90"

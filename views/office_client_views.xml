@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <form string="Office Client">
                 <header>
-                    <button name="%(action_report_client_statement)d" string="Print Statement (طباعة كشف الحساب)" type="action" class="oe_highlight"/>
+                    <button name="%(action_report_client_statement)d" string="طباعة كشف الحساب" type="action" class="oe_highlight"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Client Name"/>
+                            <field name="name" placeholder="اسم العميل"/>
                         </h1>
                     </div>
                     <group>
@@ -29,12 +29,12 @@
                     </group>
 
                     <!-- Discount Split Percentages (Visible for both Yearly and Per Invoice) -->
-                    <group string="Discount Configuration (إعدادات الخصم)" invisible="discount_type == 'none'">
-                        <group string="Discount Percentages (النسب)">
-                            <field name="yearly_discount_percentage" string="Total Discount (%) - الإجمالي"/>
-                            <field name="discount_office_percentage" string="Office (%) - المكتب"/>
-                            <field name="discount_perfume_percentage" string="Perfume Factory (%) - مصنع البرفان"/>
-                            <field name="discount_eclador_percentage" string="Eclador Factory (%) - مصنع الأكلادور"/>
+                    <group string="إعدادات الخصم" invisible="discount_type == 'none'">
+                        <group string="النسب المئوية">
+                            <field name="yearly_discount_percentage" string="إجمالي الخصم (%)"/>
+                            <field name="discount_office_percentage" string="خصم المكتب (%)"/>
+                            <field name="discount_perfume_percentage" string="خصم مصنع البرفان (%)"/>
+                            <field name="discount_eclador_percentage" string="خصم مصنع ઇكلادور (%)"/>
                         </group>
                         
                         <!-- Current Year Summary only for Yearly -->
@@ -50,7 +50,7 @@
                     </group>
 
                     <notebook>
-                        <page string="Transactions" name="transactions">
+                        <page string="الحركات" name="transactions">
                             <field name="transaction_ids" context="{'default_client_id': active_id}">
                                 <tree decoration-info="transaction_type == 'payment'" decoration-danger="transaction_type == 'invoice'">
                                     <field name="date"/>
@@ -73,7 +73,7 @@
         <field name="name">office.client.tree</field>
         <field name="model">office.client</field>
         <field name="arch" type="xml">
-            <tree string="Office Clients">
+            <tree string="عملاء المكتب">
                 <field name="name"/>
                 <field name="phone"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
@@ -101,14 +101,14 @@
         <field name="name">office.yearly.discount.report.search</field>
         <field name="model">office.yearly.discount.report</field>
         <field name="arch" type="xml">
-            <search string="Yearly Discount Search">
+            <search string="بحث الخصم السنوي">
                 <field name="client_id"/>
                 <field name="user_id"/>
                 <field name="year"/>
-                <group expand="0" string="Group By">
-                    <filter string="Client" name="group_by_client" context="{'group_by':'client_id'}"/>
+                <group expand="0" string="تجميع حسب">
+                    <filter string="العميل" name="group_by_client" context="{'group_by':'client_id'}"/>
                     <filter string="Salesperson" name="group_by_user" context="{'group_by':'user_id'}"/>
-                    <filter string="Year" name="group_by_year" context="{'group_by':'year'}"/>
+                    <filter string="السنة" name="group_by_year" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
@@ -119,29 +119,29 @@
         <field name="name">office.yearly.discount.report.tree</field>
         <field name="model">office.yearly.discount.report</field>
         <field name="arch" type="xml">
-            <tree string="Yearly Discounts (Split)" create="false" edit="false" delete="false">
+            <tree string="الخصومات السنوية (مفصلة)" create="false" edit="false" delete="false">
                 <field name="year"/>
                 <field name="client_id"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
 
                 <!-- Collections & Office Discount -->
-                <field name="total_collections" sum="Total Collections" string="Collections"/>
-                <field name="discount_office_percentage" string="Office %"/>
-                <field name="office_discount_amount" sum="Total Office Discount" string="Office Discount Amt" decoration-info="office_discount_amount &gt; 0"/>
+                <field name="total_collections" sum="إجمالي التحصيلات" string="التحصيلات"/>
+                <field name="discount_office_percentage" string="نسبة المكتب"/>
+                <field name="office_discount_amount" sum="إجمالي خصم المكتب" string="قيمة خصم المكتب" decoration-info="office_discount_amount &gt; 0"/>
 
                 <!-- Perfume Factory -->
-                <field name="perfume_invoices_total" sum="Total Perfume Invoices" string="Perfume Invoices"/>
+                <field name="perfume_invoices_total" sum="مسحوبات البرفان" string="فواتير البرفان"/>
                 <field name="discount_perfume_percentage" string="Perfume %"/>
-                <field name="perfume_discount_owed" sum="Total Perfume Discount" string="Perfume Disc. Owed" decoration-warning="perfume_discount_owed &gt; 0"/>
+                <field name="perfume_discount_owed" sum="Total Perfume Discount" string="خصم البرفان المستحق" decoration-warning="perfume_discount_owed &gt; 0"/>
 
                 <!-- Eclador Factory -->
-                <field name="eclador_invoices_total" sum="Total Eclador Invoices" string="Eclador Invoices"/>
+                <field name="eclador_invoices_total" sum="Total Eclador Invoices" string="فواتير إكلادور"/>
                 <field name="discount_eclador_percentage" string="Eclador %"/>
-                <field name="eclador_discount_owed" sum="Total Eclador Discount" string="Eclador Disc. Owed" decoration-warning="eclador_discount_owed &gt; 0"/>
+                <field name="eclador_discount_owed" sum="Total Eclador Discount" string="خصم إكلادور المستحق" decoration-warning="eclador_discount_owed &gt; 0"/>
 
                 <!-- Grand Total -->
-                <field name="yearly_discount_percentage" string="Total %"/>
-                <field name="total_earned_discount" sum="Grand Total Discount" string="Total Discount Earned" decoration-danger="total_earned_discount &gt; 0"/>
+                <field name="yearly_discount_percentage" string="إجمالي النسبة"/>
+                <field name="total_earned_discount" sum="Grand Total Discount" string="إجمالي الخصم المكتسب" decoration-danger="total_earned_discount &gt; 0"/>
             </tree>
         </field>
     </record>
@@ -151,15 +151,15 @@
         <field name="name">office.yearly.discount.report.pivot</field>
         <field name="model">office.yearly.discount.report</field>
         <field name="arch" type="xml">
-            <pivot string="Yearly Discounts Pivot">
+            <pivot string="مصفوفة الخصم السنوي">
                 <field name="year" type="row"/>
                 <field name="client_id" type="row"/>
-                <field name="office_discount_amount" type="measure" string="Office Discount"/>
-                <field name="perfume_invoices_total" type="measure" string="Perfume Invoices"/>
-                <field name="perfume_discount_owed" type="measure" string="Perfume Discount"/>
-                <field name="eclador_invoices_total" type="measure" string="Eclador Invoices"/>
-                <field name="eclador_discount_owed" type="measure" string="Eclador Discount"/>
-                <field name="total_earned_discount" type="measure" string="Total Discount"/>
+                <field name="office_discount_amount" type="measure" string="خصم المكتب"/>
+                <field name="perfume_invoices_total" type="measure" string="فواتير البرفان"/>
+                <field name="perfume_discount_owed" type="measure" string="خصم البرفان"/>
+                <field name="eclador_invoices_total" type="measure" string="فواتير إكلادور"/>
+                <field name="eclador_discount_owed" type="measure" string="خصم إكلادور"/>
+                <field name="total_earned_discount" type="measure" string="إجمالي الخصم"/>
             </pivot>
         </field>
     </record>

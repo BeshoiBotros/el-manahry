@@ -6,27 +6,27 @@ class OfficeProfitReport(models.Model):
     _description = 'Office Profit Report'
     _auto = False
 
-    year = fields.Char(string='Year', readonly=True)
-    month = fields.Char(string='Month (YYYY-MM)', readonly=True)
+    year = fields.Char(string='السنة', readonly=True)
+    month = fields.Char(string='الشهر', readonly=True)
 
     # Income side (from invoice transaction lines)
-    total_invoices = fields.Float(string='Total Invoiced', readonly=True)
-    total_office_profit = fields.Float(string='Office Gross Profit (ربح المكتب الإجمالي)', readonly=True)
-    total_factory_share = fields.Float(string='Factory Share (حصة المصانع)', readonly=True)
+    total_invoices = fields.Float(string='إجمالي الفواتير', readonly=True)
+    total_office_profit = fields.Float(string='ربح المكتب الإجمالي', readonly=True)
+    total_factory_share = fields.Float(string='حصة المصانع', readonly=True)
 
     # Expense side (from office.expense)
-    labor_expenses = fields.Float(string='Labor / عمالة', readonly=True)
-    server_expenses = fields.Float(string='Server / سيرفر', readonly=True)
-    porter_expenses = fields.Float(string='Porters / شيالين', readonly=True)
-    transport_expenses = fields.Float(string='Transport / نقل', readonly=True)
-    other_expenses = fields.Float(string='Other / أخرى', readonly=True)
-    total_expenses = fields.Float(string='Total Expenses (إجمالي المصروفات)', readonly=True)
+    labor_expenses = fields.Float(string='العمالة', readonly=True)
+    server_expenses = fields.Float(string='السيرفر', readonly=True)
+    porter_expenses = fields.Float(string='الشيالين', readonly=True)
+    transport_expenses = fields.Float(string='مواصلات ونقل', readonly=True)
+    other_expenses = fields.Float(string='أخرى', readonly=True)
+    total_expenses = fields.Float(string='إجمالي المصروفات', readonly=True)
 
     # Net profit
-    net_profit = fields.Float(string='Net Profit (صافي الربح)', readonly=True)
+    net_profit = fields.Float(string='صافي الربح', readonly=True)
 
-    factory_payments = fields.Float(string='Paid to Factory (المورد للمصانع)', readonly=True)
-    net_factory_share = fields.Float(string='Net Factory Share (المتبقي للمصانع)', readonly=True)
+    factory_payments = fields.Float(string='المورد للمصانع', readonly=True)
+    net_factory_share = fields.Float(string='المتبقي للمصنع', readonly=True)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)

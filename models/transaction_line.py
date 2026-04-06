@@ -8,15 +8,15 @@ class OfficeClientTransactionLine(models.Model):
     transaction_date = fields.Date(related='transaction_id.date', store=True, string='Transaction Date')
     transaction_type = fields.Selection(related='transaction_id.transaction_type', store=True, string='Transaction Type')
     
-    product_id = fields.Many2one('office.product', string='Product', required=True)
-    factory_type = fields.Selection(related='product_id.factory_type', store=True, string='Factory Type')
+    product_id = fields.Many2one('office.product', string='المنتج', required=True)
+    factory_type = fields.Selection(related='product_id.factory_type', store=True, string='المصنع')
     
-    quantity = fields.Float(string='Quantity', default=1.0, required=True)
-    price_unit = fields.Float(string='Unit Price', required=True)
+    quantity = fields.Float(string='الكمية', default=1.0, required=True)
+    price_unit = fields.Float(string='سعر الوحدة', required=True)
     
-    subtotal = fields.Float(string='Subtotal', compute='_compute_amounts', store=True)
-    office_profit = fields.Float(string='Office Profit', compute='_compute_amounts', store=True)
-    factory_share = fields.Float(string='Factory Share', compute='_compute_amounts', store=True)
+    subtotal = fields.Float(string='الإجمالي', compute='_compute_amounts', store=True)
+    office_profit = fields.Float(string='ربح المكتب', compute='_compute_amounts', store=True)
+    factory_share = fields.Float(string='حصة المصنع', compute='_compute_amounts', store=True)
     
     @api.onchange('product_id')
     def _onchange_product_id(self):

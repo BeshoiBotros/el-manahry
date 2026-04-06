@@ -3,15 +3,15 @@ from datetime import date
 
 class OfficeDashboard(models.TransientModel):
     _name = 'office.dashboard'
-    _description = 'Manager Dashboard'
+    _description = 'لوحة التحكم'
 
-    name = fields.Char(default='Manager Dashboard (الرئيسية)')
+    name = fields.Char(default='لوحة التحكم')
     
-    total_market_debt = fields.Float(string='Total Market Debt (إجمالي الديون بالسوق)', compute='_compute_stats')
-    total_monthly_profit = fields.Float(string='Monthly Profit (ربح الشهر)', compute='_compute_stats')
-    total_monthly_collections = fields.Float(string='Monthly Collections (تحصيلات الشهر)', compute='_compute_stats')
+    total_market_debt = fields.Float(string='الديون في السوق', compute='_compute_stats')
+    total_monthly_profit = fields.Float(string='أرباح هذا الشهر', compute='_compute_stats')
+    total_monthly_collections = fields.Float(string='التحصيلات هذا الشهر', compute='_compute_stats')
     
-    total_factory_debt = fields.Float(string='Owed to Factories (مستحقات المصانع)', compute='_compute_stats')
+    total_factory_debt = fields.Float(string='مستحقات المصانع', compute='_compute_stats')
 
     def _compute_stats(self):
         for record in self:

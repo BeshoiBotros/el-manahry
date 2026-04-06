@@ -6,7 +6,7 @@
         <field name="name">office.factory.tree</field>
         <field name="model">office.factory</field>
         <field name="arch" type="xml">
-            <tree string="Factory Accounts">
+            <tree string="حسابات المصانع">
                 <field name="name"/>
                 <field name="factory_type"/>
                 <field name="total_factory_invoices" sum="Total Invoices"/>
@@ -22,7 +22,7 @@
         <field name="name">office.factory.form</field>
         <field name="model">office.factory</field>
         <field name="arch" type="xml">
-            <form string="Factory Account">
+            <form string="حساب المصنع">
                 <sheet>
                     <group>
                         <group>
@@ -37,7 +37,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Payments">
+                        <page string="التحصيلات">
                             <field name="payment_ids">
                                 <tree editable="bottom">
                                     <field name="date"/>

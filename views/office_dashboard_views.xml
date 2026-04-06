@@ -5,7 +5,7 @@
         <field name="name">office.dashboard.form</field>
         <field name="model">office.dashboard</field>
         <field name="arch" type="xml">
-            <form string="Dashboard" create="false" edit="false" delete="false">
+            <form string="لوحة التحكم" create="false" edit="false" delete="false">
                 <sheet>
                     <div style="text-align: center; margin-bottom: 30px;">
                         <h1 style="color: #2F4F4F;">لوحة التحكم الشاملة - Manager Dashboard</h1>
@@ -51,7 +51,7 @@
 record = env['office.dashboard'].create({})
 action = {
     'type': 'ir.actions.act_window',
-    'name': 'Dashboard (الرئيسية)',
+    'name': 'الرئيسية',
     'res_model': 'office.dashboard',
     'res_id': record.id,
     'view_mode': 'form',

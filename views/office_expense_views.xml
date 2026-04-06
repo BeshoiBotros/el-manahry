@@ -9,11 +9,11 @@
         <field name="name">office.expense.form</field>
         <field name="model">office.expense</field>
         <field name="arch" type="xml">
-            <form string="Office Expense">
+            <form string="مصروف المكتب">
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" string="Description"/>
+                            <field name="name" string="البيان"/>
                             <field name="expense_type"/>
                             <field name="date"/>
                         </group>
@@ -21,7 +21,7 @@
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
-                    <group string="Notes">
+                    <group string="ملاحظات">
                         <field name="notes" nolabel="1"/>
                     </group>
                 </sheet>
@@ -51,15 +51,15 @@
                 <field name="name"/>
                 <field name="expense_type"/>
                 <field name="date"/>
-                <filter string="Labor / عمالة"       name="f_labor"     domain="[('expense_type','=','labor')]"/>
-                <filter string="Server / سيرفر"      name="f_server"    domain="[('expense_type','=','server')]"/>
-                <filter string="Porters / شيالين"    name="f_porter"    domain="[('expense_type','=','porter')]"/>
-                <filter string="Transport / نقل"     name="f_transport" domain="[('expense_type','=','transport')]"/>
-                <filter string="Other / أخرى"        name="f_other"     domain="[('expense_type','=','other')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Type"  name="gb_type"  context="{'group_by':'expense_type'}"/>
+                <filter string="العمالة"       name="f_labor"     domain="[('expense_type','=','labor')]"/>
+                <filter string="السيرفر"      name="f_server"    domain="[('expense_type','=','server')]"/>
+                <filter string="الشيالين"    name="f_porter"    domain="[('expense_type','=','porter')]"/>
+                <filter string="مواصلات ونقل"     name="f_transport" domain="[('expense_type','=','transport')]"/>
+                <filter string="أخرى"        name="f_other"     domain="[('expense_type','=','other')]"/>
+                <group expand="0" string="تجميع حسب">
+                    <filter string="نوع الحركة"  name="gb_type"  context="{'group_by':'expense_type'}"/>
                     <filter string="Month" name="gb_month" context="{'group_by':'month'}"/>
-                    <filter string="Year"  name="gb_year"  context="{'group_by':'year'}"/>
+                    <filter string="السنة"  name="gb_year"  context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
@@ -69,10 +69,10 @@
         <field name="name">office.expense.pivot</field>
         <field name="model">office.expense</field>
         <field name="arch" type="xml">
-            <pivot string="Expenses Pivot">
+            <pivot string="مصفوفة المصروفات">
                 <field name="month"        type="row"/>
                 <field name="expense_type" type="col"/>
-                <field name="amount"       type="measure" string="Amount"/>
+                <field name="amount"       type="measure" string="القيمة"/>
             </pivot>
         </field>
     </record>
@@ -81,7 +81,7 @@
         <field name="name">office.expense.graph</field>
         <field name="model">office.expense</field>
         <field name="arch" type="xml">
-            <graph string="Expenses by Type" type="bar" stacked="True">
+            <graph string="تصنيف المصروفات" type="bar" stacked="True">
                 <field name="month"        type="row"/>
                 <field name="expense_type" type="col"/>
                 <field name="amount"       type="measure"/>
@@ -108,8 +108,8 @@
             <search string="Profit Report Search">
                 <field name="year"/>
                 <field name="month"/>
-                <group expand="1" string="Group By">
-                    <filter string="Year"  name="gb_year"  context="{'group_by':'year'}"/>
+                <group expand="1" string="تجميع حسب">
+                    <filter string="السنة"  name="gb_year"  context="{'group_by':'year'}"/>
                     <filter string="Month" name="gb_month" context="{'group_by':'month'}"/>
                 </group>
             </search>
@@ -127,22 +127,22 @@
                 <field name="month"  string="Month"/>
 
                 <!-- Income -->
-                <field name="total_invoices"      sum="Total Invoiced"       string="Total Invoiced"/>
-                <field name="total_office_profit" sum="Gross Office Profit"  string="Gross Profit (ربح إجمالي)" decoration-info="total_office_profit &gt; 0"/>
-                <field name="total_factory_share" sum="Factory Share"        string="Factory Share" optional="show"/>
-                <field name="factory_payments" sum="Total Paid"        string="Paid to Factory" optional="show"/>
-                <field name="net_factory_share" sum="Remaining Share"        string="Net Factory Share" optional="show" decoration-danger="net_factory_share &gt; 0"/>
+                <field name="total_invoices"      sum="إجمالي الفواتير"       string="إجمالي الفواتير"/>
+                <field name="total_office_profit" sum="Gross Office Profit"  string="الربح الإجمالي" decoration-info="total_office_profit &gt; 0"/>
+                <field name="total_factory_share" sum="حصة المصنع"        string="حصة المصنع" optional="show"/>
+                <field name="factory_payments" sum="Total Paid"        string="المورد للمصنع" optional="show"/>
+                <field name="net_factory_share" sum="Remaining Share"        string="صافي حصة المصنع" optional="show" decoration-danger="net_factory_share &gt; 0"/>
 
                 <!-- Expenses breakdown -->
-                <field name="labor_expenses"     sum="Labor"     string="Labor / عمالة"    optional="show"/>
-                <field name="server_expenses"    sum="Server"    string="Server / سيرفر"   optional="show"/>
-                <field name="porter_expenses"    sum="Porters"   string="Porters / شيالين" optional="show"/>
-                <field name="transport_expenses" sum="Transport" string="Transport / نقل"  optional="show"/>
-                <field name="other_expenses"     sum="Other"     string="Other / أخرى"     optional="show"/>
-                <field name="total_expenses"     sum="Total Expenses" string="Total Expenses (إجمالي المصروفات)" decoration-danger="total_expenses &gt; 0"/>
+                <field name="labor_expenses"     sum="Labor"     string="العمالة"    optional="show"/>
+                <field name="server_expenses"    sum="Server"    string="السيرفر"   optional="show"/>
+                <field name="porter_expenses"    sum="Porters"   string="الشيالين" optional="show"/>
+                <field name="transport_expenses" sum="Transport" string="مواصلات ونقل"  optional="show"/>
+                <field name="other_expenses"     sum="Other"     string="أخرى"     optional="show"/>
+                <field name="total_expenses"     sum="إجمالي المصروفات" string="إجمالي المصروفات" decoration-danger="total_expenses &gt; 0"/>
 
                 <!-- Net -->
-                <field name="net_profit" sum="Net Profit" string="Net Profit (صافي الربح)"
+                <field name="net_profit" sum="Net Profit" string="صافي الربح"
                        decoration-success="net_profit &gt; 0"
                        decoration-danger="net_profit &lt; 0"/>
             </tree>
@@ -155,11 +155,11 @@
         <field name="arch" type="xml">
             <pivot string="Profit Report Pivot">
                 <field name="month"               type="row"/>
-                <field name="total_office_profit" type="measure" string="Gross Profit"/>
-                <field name="total_factory_share" type="measure" string="Factory Share"/>
-                <field name="factory_payments" type="measure" string="Paid to Factory"/>
-                <field name="net_factory_share" type="measure" string="Remaining Share"/>
-                <field name="total_expenses"      type="measure" string="Total Expenses"/>
+                <field name="total_office_profit" type="measure" string="الربح الإجمالي"/>
+                <field name="total_factory_share" type="measure" string="حصة المصنع"/>
+                <field name="factory_payments" type="measure" string="المورد للمصنع"/>
+                <field name="net_factory_share" type="measure" string="الحصة المتبقية"/>
+                <field name="total_expenses"      type="measure" string="إجمالي المصروفات"/>
                 <field name="net_profit"          type="measure" string="Net Profit"/>
                 <field name="labor_expenses"      type="measure" string="Labor"/>
                 <field name="server_expenses"     type="measure" string="Server"/>
@@ -174,10 +174,10 @@
         <field name="name">office.profit.report.graph</field>
         <field name="model">office.profit.report</field>
         <field name="arch" type="xml">
-            <graph string="Net Profit by Month" type="bar">
+            <graph string="صافي الربح الشهري" type="bar">
                 <field name="month"               type="row"/>
-                <field name="total_office_profit" type="measure" string="Gross Profit"/>
-                <field name="total_expenses"      type="measure" string="Expenses"/>
+                <field name="total_office_profit" type="measure" string="الربح الإجمالي"/>
+                <field name="total_expenses"      type="measure" string="المصروفات"/>
                 <field name="net_profit"          type="measure" string="Net Profit"/>
             </graph>
         </field>

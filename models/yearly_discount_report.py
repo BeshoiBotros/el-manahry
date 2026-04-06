@@ -6,12 +6,12 @@ class OfficeYearlyDiscountReport(models.Model):
     _description = 'Yearly Discount Report (Split by Factory)'
     _auto = False
 
-    client_id = fields.Many2one('office.client', string='Client', readonly=True)
+    client_id = fields.Many2one('office.client', string='العميل', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
-    year = fields.Char(string='Year', readonly=True)
+    year = fields.Char(string='السنة', readonly=True)
 
     # The overall agreed discount percentage (e.g., 6%)
-    yearly_discount_percentage = fields.Float(string='Total Discount (%)', readonly=True)
+    yearly_discount_percentage = fields.Float(string='إجمالي الخصم (%)', readonly=True)
 
     # Sub-percentages — stored on the client
     discount_office_percentage = fields.Float(string='Office %', readonly=True)
@@ -20,7 +20,7 @@ class OfficeYearlyDiscountReport(models.Model):
 
     # ---- Office portion ----
     # Applied to: annual payments (collections) × office %
-    total_collections = fields.Float(string='Total Collections', readonly=True)
+    total_collections = fields.Float(string='إجمالي التحصيلات', readonly=True)
     office_discount_amount = fields.Float(string='Office Discount Amt', readonly=True)
 
     # ---- Perfume factory portion ----
